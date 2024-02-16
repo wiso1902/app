@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1053937507151",
+    "project_id": "databas-be99f",
+    "storage_bucket": "databas-be99f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1053937507151:android:5b09dfacde11fb55c0c33a",
+        "android_client_info": {
+          "package_name": "com.whysApp.whyAppen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlh8qDqje6FH2xUoRufJmF4VwuMOqD_t8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
