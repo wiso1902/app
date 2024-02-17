@@ -44,6 +44,7 @@ dependencies:
   firebase_database: ^10.4.5
   firebase_messaging: ^14.7.15
   firebase_core_platform_interface: ^5.0.0
+  shared_preferences: ^2.2.2
 
   #Animation
   font_awesome_flutter: ^10.7.0
@@ -51,6 +52,8 @@ dependencies:
   flutter_staggered_animations: ^1.0.0
   awesome_dialog: ^3.0.2
   animated_digit: ^3.2.3
+  animated_number: ^1.0.2
+  animated_flip_counter: ^0.2.6
 
   #Premission
   intl: ^0.18.1

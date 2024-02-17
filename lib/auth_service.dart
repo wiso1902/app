@@ -17,11 +17,12 @@ class AuthenticationService {
   Future<String?> signIn({required String email, required String password}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-      return "Signed in";
+      return "SignedIn";
     } on FirebaseAuthException catch (e) {
       String error = e.message.toString();
       Fluttertoast.showToast(msg: error, toastLength: Toast.LENGTH_LONG, textColor: Colors.orange, backgroundColor: Colors.white);
     }
+    return null;
   }
 
   Future<String?> signUp({required String email, required String password}) async {
