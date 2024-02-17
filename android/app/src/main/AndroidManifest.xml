@@ -1,7 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:installLocation="auto"
-    >
-    <uses-permission android:name="android.premission.INTERNET"/>
+    android:installLocation="auto">
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="Why Appen"
         android:name="${applicationName}"
