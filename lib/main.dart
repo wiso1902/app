@@ -7,15 +7,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:animated_digit/animated_digit.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:why_appen/save_traning/spara_tr_list.dart';
 import 'package:why_appen/sign_in_page/sign_in_page.dart';
 import 'package:why_appen/widgets/palatte.dart';
-
-import 'auth_service.dart';
+import 'list_view/tr_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +58,8 @@ class MyScreen extends StatefulWidget {
 
 class _MyScreenState extends State<MyScreen> {
 
+
+  TextEditingController trController = TextEditingController();
   //-------------------------------INIT APP--------------------------------------------
   late List items = ['Välj träning'];
   late int total = 0;
@@ -179,7 +180,7 @@ class _MyScreenState extends State<MyScreen> {
           ),
           Flexible(
             fit: FlexFit.tight, // Ensures it takes up all available space
-            child: buildStreamBuilderDate(),
+            child: build_stream_tr(trViewDate: trViewDate),
           ),
         ],
       ),
@@ -216,7 +217,7 @@ class _MyScreenState extends State<MyScreen> {
               context.read<AuthenticationService>().signOut();
               break;
             case 2:
-              showCreateTr(context);
+              showCreateTr(context, trController);
               break;
           }
         },
@@ -336,8 +337,7 @@ class _MyScreenState extends State<MyScreen> {
                         dialogType: DialogType.error,
                         showCloseIcon: true,
                         title: 'Datum redan sparat',
-                        desc:
-                            "Du har redan sparat en träning med datumet $dateShow testa ett nytt datum",
+                        desc: "Du har redan sparat en träning med datumet $dateShow testa ett nytt datum",
                         btnOkOnPress: () {
                           debugPrint('OnClcik');
                         },
@@ -358,115 +358,5 @@ class _MyScreenState extends State<MyScreen> {
       );
   //_________________________________SPARA TRÄING----------------------------------------
 
-  //---------------------------------SPARA NY TRÄNING------------------------------------
-  TextEditingController trController = TextEditingController();
-  showCreateTr(BuildContext context) => showDialog(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: Text(
-          "Lägg till en ny träning",
-          style: kText,
-        ),
-        actions: [
-          Column(
-            children: [
-              CupertinoTextField(
-                controller: trController,
-                style: kBodytext,
-                textAlign: TextAlign.center,
-                placeholder: "Ny träning",
-                placeholderStyle: TextStyle(color: Colors.grey),
-              ),
-              TextButton(
-                child: Text(
-                  "Lägg till",
-                  style: kText,
-                ),
-                onPressed: () {
-                  Addtr();
-                  trController.clear();
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ],
-      ));
-
-  Addtr() async {
-    String test = trController.text;
-    items.add(trController.text);
-    var collection = FirebaseFirestore.instance.collection('val');
-    collection
-        .doc('items') // <-- Document ID
-        .set({'items': FieldValue.arrayUnion(items)}) // <-- Add data
-        .then(
-            (_) => AwesomeDialog(
-          context: context,
-          animType: AnimType.leftSlide,
-          headerAnimationLoop: false,
-          dialogType: DialogType.success,
-          showCloseIcon: true,
-          title: 'Ny träning tillagd',
-          desc:
-          "Nya träningen $test är tillagd",
-          btnOkOnPress: () {
-            debugPrint('OnClcik');
-          },
-          btnOkIcon: Icons.check_circle,
-          onDismissCallback: (type) {
-            debugPrint('Dialog Dissmiss from callback $type');
-          },
-        )..show()
-    )
-        .catchError((error) => print('Add failed: $error'));
-  }
-  //---------------------------------SPARA NY TRÄNING------------------------------------
-
-
-
-  //--------------------------------VISA NYASTE TRÄNINGAR--------------------------------
-  StreamBuilder<QuerySnapshot<Object?>> buildStreamBuilderDate() {
-    return StreamBuilder<QuerySnapshot>(
-      stream: trViewDate,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return const Text('Nått gick snett');
-        }
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Text('Datan hämtas');
-        }
-        final data = snapshot.requireData;
-        return AnimationLimiter(
-          child: ListView.builder(
-              itemCount: data.size,
-              itemBuilder: (context, index) {
-                QueryDocumentSnapshot user = snapshot.data!.docs[index];
-                String imagePath = user['imagePath'];
-                return AnimationConfiguration.staggeredList(
-                  position: index,
-                  duration: const Duration(seconds: 1),
-                  child: SlideAnimation(
-                    verticalOffset: 44,
-                    child: FadeInAnimation(
-                      child: Card(
-                        child: ListTile(
-                          leading: CircleAvatar(
-                              radius: 30,
-                              backgroundImage: NetworkImage(imagePath)),
-                          title: Text('${data.docs[index]['name']}'),
-                          subtitle: Text('${data.docs[index]['träning']}'),
-                          trailing: Text('${data.docs[index]['datum']}'),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
-        );
-      },
-    );
-  }
-//--------------------------------VISA NYASTE TRÄNINGAR--------------------------------
-
 }
+

@@ -1,13 +1,14 @@
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:why_appen/auth_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:why_appen/widgets/palatte.dart';
-import '../auth_service.dart';
+import 'package:why_appen/sign_up_page/create_account_password__check.dart';
+import 'create_account_btn.dart';
+import 'create_account_email.dart';
+import 'create_account_password.dart';
 
 class SignUpPage extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordController1 = TextEditingController();
+  final TextEditingController passwordControllerCheck = TextEditingController();
 
   SignUpPage({super.key});
 
@@ -24,7 +25,8 @@ class SignUpPage extends StatelessWidget {
                   const SizedBox(
                     height: 50,
                   ),
-                  Image.asset('assets/images/why-logotyp-clean.webp', width: 300, height: 150),
+                  Image.asset('assets/images/why-logotyp-clean.webp',
+                      width: 300, height: 150),
                   const SizedBox(
                     height: 20,
                   ),
@@ -34,117 +36,14 @@ class SignUpPage extends StatelessWidget {
                       children: [
                         Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[500]?.withOpacity(0.4),
-                                  borderRadius: BorderRadius.circular(16),
-                                ),
-                                child: TextField(
-                                  decoration: const InputDecoration(
-                                    contentPadding:
-                                    EdgeInsets.symmetric(vertical: 20),
-                                    border: InputBorder.none,
-                                    hintText: 'Email',
-                                    prefixIcon: Padding(
-                                      padding:
-                                      EdgeInsets.symmetric(horizontal: 20),
-                                      child: Icon(
-                                        FontAwesomeIcons.envelope,
-                                        color: Colors.white,
-                                        size: 30,
-                                      ),
-                                    ),
-                                    hintStyle: kBodytext,
-                                  ),
-                                  style: kBodytext,
-                                  keyboardType: TextInputType.emailAddress,
-                                  textInputAction: TextInputAction.next,
-                                  controller: emailController,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[500]?.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                  contentPadding:
-                                  EdgeInsets.symmetric(vertical: 20),
-                                  border: InputBorder.none,
-                                  hintText: 'Lösenord',
-                                  prefixIcon: Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 20),
-                                    child: Icon(
-                                      FontAwesomeIcons.lock,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                  ),
-                                  hintStyle: kBodytext,
-                                ),
-                                style: kBodytext,
-                                keyboardType: TextInputType.emailAddress,
-                                obscureText: true,
-                                textInputAction: TextInputAction.done,
-                                controller: passwordController,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[500]?.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                  contentPadding:
-                                  EdgeInsets.symmetric(vertical: 20),
-                                  border: InputBorder.none,
-                                  hintText: 'Lösenord',
-                                  prefixIcon: Padding(
-                                    padding:
-                                    EdgeInsets.symmetric(horizontal: 20),
-                                    child: Icon(
-                                      FontAwesomeIcons.lock,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                  ),
-                                  hintStyle: kBodytext,
-                                ),
-                                style: kBodytext,
-                                keyboardType: TextInputType.emailAddress,
-                                obscureText: true,
-                                textInputAction: TextInputAction.done,
-                                controller: passwordController,
-                              ),
-                            ),
+                            create_account_email(emailController: emailController),
+                            create_account_password(passwordController: passwordController),
+                            create_account_password_check(passwordControllerCheck: passwordControllerCheck),
                           ],
                         ),
                         Column(
                           children: [
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: TextButton(
-                                onPressed: () async {
-                                },
-                                child: const Text('Skapa konto'),
-                              ),
-                            ),
+                            create_account_btn(emailController: emailController, passwordController: passwordController, passwordControllerCheck: passwordControllerCheck),
                           ],
                         ),
                       ],
@@ -159,3 +58,5 @@ class SignUpPage extends StatelessWidget {
     );
   }
 }
+
+
