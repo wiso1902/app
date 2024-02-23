@@ -23,7 +23,6 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -32,7 +31,9 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthenticationService(FirebaseAuth.instance),
         ),
         StreamProvider(
-          create: (context) => context.read<AuthenticationService>().authStateChanges, initialData: null,
+          create: (context) =>
+              context.read<AuthenticationService>().authStateChanges,
+          initialData: null,
         )
       ],
       child: MaterialApp(
@@ -57,16 +58,7 @@ class MyScreen extends StatefulWidget {
 }
 
 class _MyScreenState extends State<MyScreen> {
-
-
   TextEditingController trController = TextEditingController();
-  //-------------------------------INIT APP--------------------------------------------
-  late List items = ['Välj träning'];
-  late int total = 0;
-  late FixedExtentScrollController scrollController;
-  DateTime dateTime = DateTime.now();
-  var index = 0;
-  late DateTime selectedDate = DateTime.now();
 
   Future<void> checkSignInStatus(BuildContext context) async {
     User? user = FirebaseAuth.instance.currentUser;
@@ -75,11 +67,27 @@ class _MyScreenState extends State<MyScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => SignInPage()),
-      );
+      );// Return false if user is not signed in
     } else {
-      showAlertDialog(context);
+      await user.reload(); // Reload user data to get the latest info
+      final userClaims = (await user.getIdTokenResult()).claims;
+      if (userClaims != null && userClaims['disabled'] == true) {
+        // Return true if account is disabled
+      } else {
+        // Account is enabled, return false
+        showAlertDialog(context);
+      }
     }
   }
+
+
+  //-------------------------------INIT APP--------------------------------------------
+  late List items = ['Välj träning'];
+  late int total = 0;
+  late FixedExtentScrollController scrollController;
+  DateTime dateTime = DateTime.now();
+  var index = 0;
+  late DateTime selectedDate = DateTime.now();
 
   Future<void> loadSelectedDates() async {
     final prefs = await SharedPreferences.getInstance();
@@ -100,7 +108,7 @@ class _MyScreenState extends State<MyScreen> {
 
   String getText() {
     return DateFormat('yyyy-MM-dd').format(dateTime);
-    }
+  }
 
   fetchItems() async {
     DocumentSnapshot ds =
@@ -208,7 +216,7 @@ class _MyScreenState extends State<MyScreen> {
               ),
               label: "Saknas en träning?")
         ],
-        onTap: (int idx) {
+        onTap: (int idx) async {
           switch (idx) {
             case 0:
               checkSignInStatus(context);
@@ -225,7 +233,6 @@ class _MyScreenState extends State<MyScreen> {
     );
   }
   //-------------------------------BODY------------------------------------------------
-
 
 //_________________________________SPARA TRÄING----------------------------------------
   List<DateTime> selectedDates = [];
@@ -337,7 +344,8 @@ class _MyScreenState extends State<MyScreen> {
                         dialogType: DialogType.error,
                         showCloseIcon: true,
                         title: 'Datum redan sparat',
-                        desc: "Du har redan sparat en träning med datumet $dateShow testa ett nytt datum",
+                        desc:
+                            "Du har redan sparat en träning med datumet $dateShow testa ett nytt datum",
                         btnOkOnPress: () {
                           debugPrint('OnClcik');
                         },
@@ -357,6 +365,4 @@ class _MyScreenState extends State<MyScreen> {
         ),
       );
   //_________________________________SPARA TRÄING----------------------------------------
-
 }
-
