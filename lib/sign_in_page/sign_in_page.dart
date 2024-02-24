@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:why_appen/sign_in_page/skapa_konto_btn.dart';
-import '../sign_up_page/sign_up_page.dart';
 import 'login_btn.dart';
 import 'password_field.dart';
 import 'text_field.dart';

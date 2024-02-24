@@ -17,6 +17,7 @@ class create_account_btn extends StatelessWidget {
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final TextEditingController passwordControllerCheck;
+  final bool backButton= false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +40,7 @@ class create_account_btn extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => create_user_page(userId: userId),
+                  builder: (context) => create_user_page(userId: userId, enableBackButton: backButton,),
                 ),
               );
             } else {

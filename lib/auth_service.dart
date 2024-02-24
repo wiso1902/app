@@ -31,6 +31,8 @@ class AuthenticationService {
         email: email,
         password: password,
       );
+      await FirebaseAuth.instance.signOut();
+
       String? userId = userCredential.user?.uid;
       return userId;
     } on FirebaseAuthException catch (e) {

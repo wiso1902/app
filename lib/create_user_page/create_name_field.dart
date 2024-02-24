@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../widgets/palatte.dart';
 
 class create_name extends StatelessWidget {

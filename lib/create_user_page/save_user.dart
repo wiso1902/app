@@ -2,7 +2,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:io';
-import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:why_appen/create_user_page/create_user_page.dart'; // Import Firestore
@@ -42,6 +41,7 @@ class SaveUser extends StatelessWidget {
             },
             btnOkIcon: Icons.check_circle,
             onDismissCallback: (type) {
+              Navigator.of(context).pop();
               debugPrint('Dialog Dissmiss from callback $type');
             },
           ).show());
