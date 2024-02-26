@@ -32,7 +32,7 @@ class login_btn extends StatelessWidget {
 
           if (result == "SignedIn") {
             // Sign-in was successful, navigate to another page
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           } else {
             // Sign-in failed, handle the error (e.g., display error message to the user)
             showDialog(

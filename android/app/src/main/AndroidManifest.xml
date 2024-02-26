@@ -2,7 +2,7 @@
     android:installLocation="auto">
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="Why Appen"
+        android:label="Why's App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

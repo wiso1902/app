@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:why_appen/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,14 +14,13 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:why_appen/list_view_top/list_view_top.dart';
 import 'package:why_appen/save_traning/spara_tr_list.dart';
+import 'package:why_appen/sign_in_page/sign_in_page.dart';
 import 'package:why_appen/upload_tr/build_dialog.dart';
 import 'package:why_appen/upload_tr/set_data_tr.dart';
 import 'package:why_appen/user_status/user_status.dart';
 import 'package:why_appen/variables/variables.dart';
 import 'create_user_page/create_user_page.dart';
 import 'list_view/tr_view.dart';
-
-
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,13 +71,11 @@ class _MyScreenState extends State<MyScreen> {
   Future<void> loadSelectedDates() async {
     final prefs = await SharedPreferences.getInstance();
     final List<String>? dateStringList = prefs.getStringList('selectedDates');
-    print('Loaded date strings: $dateStringList'); // Debug print
     setState(() {
       selectedDates = (dateStringList ?? []).map((dateString) {
         DateTime parsedDate = DateTime.parse(dateString).toLocal();
         return DateTime(parsedDate.year, parsedDate.month, parsedDate.day);
       }).toList();
-      print('Selected dates: $selectedDates'); // Debug print
     });
   }
 
@@ -104,8 +102,10 @@ class _MyScreenState extends State<MyScreen> {
   }
 
   fetchItems() async {
-    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('val').doc('items').get();
-    dynamic itemsData = ds.get('items'); // Assuming items is initially fetched as dynamic
+    DocumentSnapshot ds =
+        await FirebaseFirestore.instance.collection('val').doc('items').get();
+    dynamic itemsData =
+        ds.get('items'); // Assuming items is initially fetched as dynamic
     if (itemsData is List<dynamic>) {
       items = itemsData.cast<String>(); // Cast to List<String>
     } else {
@@ -114,23 +114,34 @@ class _MyScreenState extends State<MyScreen> {
     }
   }
 
+  onTapFunction(BuildContext context) async {
+    final reLoadPage = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SignInPage()),
+    );
+
+    if (reLoadPage) {
+      initState();
+    }
+  }
+
   getNameAndImage() async {
     fetchUserID();
     DocumentSnapshot ds =
-    await FirebaseFirestore.instance.collection('users').doc(userId).get();
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
     name = ds.get('name');
     imagePath = ds.get('imagePath');
   }
 
   getTotala() async {
     DocumentSnapshot ds =
-    await FirebaseFirestore.instance.collection('total').doc('total').get();
+        await FirebaseFirestore.instance.collection('total').doc('total').get();
     totala = ds.get('total');
   }
 
   getUserScore() async {
     DocumentSnapshot ds =
-    await FirebaseFirestore.instance.collection('top').doc(userId).get();
+        await FirebaseFirestore.instance.collection('top').doc(userId).get();
     totalTr1 = ds.get('totalTr');
     return totalTr1;
   }
@@ -147,10 +158,8 @@ class _MyScreenState extends State<MyScreen> {
   }
 
   getTotal() async {
-    DocumentSnapshot ds = await FirebaseFirestore.instance
-        .collection('total')
-        .doc('total')
-        .get();
+    DocumentSnapshot ds =
+        await FirebaseFirestore.instance.collection('total').doc('total').get();
     int totalInt;
     totalInt = ds.get('total');
     setState(() {
@@ -168,16 +177,11 @@ class _MyScreenState extends State<MyScreen> {
       .orderBy('totalTr', descending: true)
       .snapshots();
 
-  void printDate() {
-    print(dateTime);
-  }
-
   @override
   void initState() {
     super.initState();
     getOk();
     loadSelectedDates();
-    printDate();
     getTotal();
     getNameAndImage();
     fetchUserID();
@@ -196,11 +200,33 @@ class _MyScreenState extends State<MyScreen> {
         title: Row(
           children: [
             IconButton(
-              onPressed: () {
-                context.read<AuthenticationService>().signOut();
+              onPressed: () async {       // Execute asynchronous operation
+                final result = await checkSignInStatus(context);
+                if (result == true) {
+                  // User is signed in, navigate to settings page
+                  AwesomeDialog(
+                    context: context,
+                    dialogType: DialogType.info,
+                    width: 280,
+                    buttonsBorderRadius: const BorderRadius.all(
+                      Radius.circular(2),
+                    ),
+                    dismissOnTouchOutside: true,
+                    dismissOnBackKeyPress: false,
+                    headerAnimationLoop: false,
+                    animType: AnimType.bottomSlide,
+                    title: 'Sign out',
+                    desc: 'Är du säker på att du vill logga ut?',
+                    showCloseIcon: true,
+                    btnOkOnPress: () {
+                      context.read<AuthenticationService>().signOut();
+                    },
+                    btnCancelOnPress: () {},
+                  ).show();
+                }
               },
               icon: const Icon(
-                FontAwesomeIcons.arrowLeft,
+                FontAwesomeIcons.arrowRightFromBracket,
                 color: Colors.orangeAccent,
               ),
               tooltip: 'Logga ut',
@@ -273,7 +299,9 @@ class _MyScreenState extends State<MyScreen> {
           ),
           Flexible(
             fit: FlexFit.tight, // Ensures it takes up all available space
-            child: isChecked ? build_stream_top(trViewTop: trViewTop) : build_stream_tr(trViewDate: trViewDate),
+            child: isChecked
+                ? build_stream_top(trViewTop: trViewTop)
+                : build_stream_tr(trViewDate: trViewDate),
           ),
         ],
       ),
@@ -326,7 +354,6 @@ class _MyScreenState extends State<MyScreen> {
                     selectedIndex, // Pass selectedIndex
                     selectedDateTime, // Pass selectedDateTime
                   );
-
                 }
               });
               break;
@@ -363,7 +390,8 @@ class _MyScreenState extends State<MyScreen> {
     getUserScore();
     getTotala();
     if (ok == false) {
-      top.doc(userId)
+      top
+          .doc(userId)
           .set({
             'totalTr': totalTr,
             'name': name,
@@ -376,7 +404,8 @@ class _MyScreenState extends State<MyScreen> {
               textColor: Colors.orange,
               backgroundColor: Colors.white));
     } else if (ok == true) {
-      top.doc(userId)
+      top
+          .doc(userId)
           .update({
             'totalTr': totalTr1 + 1,
             'name': name,
@@ -389,7 +418,8 @@ class _MyScreenState extends State<MyScreen> {
               textColor: Colors.orange,
               backgroundColor: Colors.white));
     }
-    totaltr.doc('total')
+    totaltr
+        .doc('total')
         .update({
           'total': totala + 1,
         })
