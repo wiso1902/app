@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../auth_service.dart';
+import '../main.dart';
 
 class login_btn extends StatelessWidget {
   const login_btn({
@@ -32,7 +33,8 @@ class login_btn extends StatelessWidget {
 
           if (result == "SignedIn") {
             // Sign-in was successful, navigate to another page
-            Navigator.pop(context, true);
+            Navigator.pop(context);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyApp()));
           } else {
             // Sign-in failed, handle the error (e.g., display error message to the user)
             showDialog(
@@ -55,7 +57,7 @@ class login_btn extends StatelessWidget {
           }
         },
         child: Text(
-          'Logga in',
+          'Sign in',
           style: TextStyle(
               color: Colors.grey[300], fontSize: 22),
         ),

@@ -23,7 +23,7 @@ class create_name extends StatelessWidget {
             contentPadding:
             EdgeInsets.symmetric(vertical: 10),
             border: InputBorder.none,
-            hintText: 'Användarnamn',
+            hintText: 'Username',
             hintStyle: kBodytext,
           ),
           textAlign: TextAlign.center,

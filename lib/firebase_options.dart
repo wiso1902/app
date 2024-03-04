@@ -24,12 +24,12 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
-      case TargetPlatform.iOS:
         throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
+          'DefaultFirebaseOptions have not been configured for android - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
+      case TargetPlatform.iOS:
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -52,12 +52,13 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDlh8qDqje6FH2xUoRufJmF4VwuMOqD_t8',
-    appId: '1:1053937507151:android:5b09dfacde11fb55c0c33a',
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyCsg4WFTplIJ9_IkiO5ZfIIdC4co-Gbcz4',
+    appId: '1:1053937507151:ios:0e3720acc65f1ea9c0c33a',
     messagingSenderId: '1053937507151',
     projectId: 'databas-be99f',
     databaseURL: 'https://databas-be99f-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'databas-be99f.appspot.com',
+    iosBundleId: 'com.whysApp.whyAppen',
   );
 }

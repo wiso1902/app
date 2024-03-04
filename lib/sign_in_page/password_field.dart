@@ -24,7 +24,7 @@ class password_field extends StatelessWidget {
             contentPadding:
             EdgeInsets.symmetric(vertical: 20),
             border: InputBorder.none,
-            hintText: 'Lösenord',
+            hintText: 'Password',
             prefixIcon: Padding(
               padding:
               EdgeInsets.symmetric(horizontal: 20),

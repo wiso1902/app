@@ -16,7 +16,7 @@ class skapa_konto_btn extends StatelessWidget {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text("Gå tillbaka",
+          child: Text("Go back",
               style: TextStyle(color: Colors.grey[700])),
         ),
         TextButton(
@@ -27,7 +27,7 @@ class skapa_konto_btn extends StatelessWidget {
                   builder: (context) => SignUpPage()),
             );
           },
-          child: Text("Skapa konto",
+          child: Text("Create account",
               style: TextStyle(color: Colors.grey[700])),
         ),
       ],

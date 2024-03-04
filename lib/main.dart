@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:why_appen/list_view_top/list_view_top.dart';
 import 'package:why_appen/save_traning/spara_tr_list.dart';
+import 'package:why_appen/sign_in_page/login_btn.dart';
 import 'package:why_appen/sign_in_page/sign_in_page.dart';
 import 'package:why_appen/upload_tr/build_dialog.dart';
 import 'package:why_appen/upload_tr/set_data_tr.dart';
@@ -31,6 +32,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return MultiProvider(
       providers: [
         Provider<AuthenticationService>(
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
         )
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           dividerColor: Colors.black,
@@ -97,8 +100,12 @@ class _MyScreenState extends State<MyScreen> {
   }
 
   fetchUserID() async {
-    User getUser = FirebaseAuth.instance.currentUser!;
-    userId = getUser.uid;
+    User? getUser = FirebaseAuth.instance.currentUser;
+    if (getUser != null) {
+      userId = getUser.uid;
+    } else {
+      // Handle the case when the current user is nul
+    }
   }
 
   fetchItems() async {
@@ -114,19 +121,9 @@ class _MyScreenState extends State<MyScreen> {
     }
   }
 
-  onTapFunction(BuildContext context) async {
-    final reLoadPage = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SignInPage()),
-    );
 
-    if (reLoadPage) {
-      initState();
-    }
-  }
 
   getNameAndImage() async {
-    fetchUserID();
     DocumentSnapshot ds =
         await FirebaseFirestore.instance.collection('users').doc(userId).get();
     name = ds.get('name');
@@ -180,22 +177,36 @@ class _MyScreenState extends State<MyScreen> {
   @override
   void initState() {
     super.initState();
-    getOk();
-    loadSelectedDates();
-    getTotal();
-    getNameAndImage();
-    fetchUserID();
+    final authService = context.read<AuthenticationService>();
+    authService.authStateChanges.listen((User? user) {
+      if (user != null) {
+        // User is signed in
+        fetchUserID().then((_) {
+          getNameAndImage();
+          getOk();
+          getUserScore();
+        });
+      } else {
+        // User is not signed in
+        // Handle the case when the user is not signed in
+        // For example, you might want to display a sign-in screen
+        print("not signed in");
+      }
+    });
     fetchItems();
     getTotala();
-    getUserScore();
     scrollController = FixedExtentScrollController(initialItem: index);
+    loadSelectedDates();
+    getTotal();
   }
+
   //-------------------------------INIT APP--------------------------------------------
 
   //-------------------------------BODY------------------------------------------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         title: Row(
           children: [
@@ -207,10 +218,6 @@ class _MyScreenState extends State<MyScreen> {
                   AwesomeDialog(
                     context: context,
                     dialogType: DialogType.info,
-                    width: 280,
-                    buttonsBorderRadius: const BorderRadius.all(
-                      Radius.circular(2),
-                    ),
                     dismissOnTouchOutside: true,
                     dismissOnBackKeyPress: false,
                     headerAnimationLoop: false,

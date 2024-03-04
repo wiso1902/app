@@ -50,8 +50,8 @@ class create_account_btn extends StatelessWidget {
                 headerAnimationLoop: false,
                 dialogType: DialogType.error,
                 showCloseIcon: true,
-                title: 'Ett fel hände med registreringen',
-                desc: "Nått gick snätt, kolla så att du har tillgång till internet, eller att du använde minst 6 tecken i lösenordet",
+                title: 'Error',
+                desc: "An error occurd while registering check your internet connectivity and make sure your password was least 6 characters long",
                 btnOkOnPress: () {
                   debugPrint('OnClcik');
                   passwordController.clear();
@@ -73,8 +73,8 @@ class create_account_btn extends StatelessWidget {
               headerAnimationLoop: false,
               dialogType: DialogType.error,
               showCloseIcon: true,
-              title: 'Lösenorden stämmer inte',
-              desc: "Lösenorden stämmer inte, kolla lösenorden och försök igen",
+              title: 'Password doesnt match',
+              desc: "The passwords doesnt match, check your passwords and try again",
               btnOkOnPress: () {
                 debugPrint('OnClcik');
                 passwordController.clear();
@@ -89,7 +89,7 @@ class create_account_btn extends StatelessWidget {
           }
         },
         child: Text(
-          'Skapa konto',
+          'Create account',
           style: TextStyle(
               color: Colors.grey[300], fontSize: 22),
         ),
